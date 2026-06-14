@@ -24,6 +24,14 @@ get_header(); ?>
 		 <div class="entry-meta">
                         <!-- Displays the publication date and author name -->
                         Posted on <?php the_date(); ?> 
+			 <?php
+// Place this inside the loop to display links to the current post's categories
+if ( has_category() ) {
+    echo '| <span class="post-categories"> Posted Under ';
+    the_category( ', ' ); // Separates categories with a comma
+    echo '</span>';
+}
+?>
                     </div>
 
 	</header><!-- .entry-header -->
