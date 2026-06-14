@@ -44,5 +44,6 @@ get_header(); ?>
     endif; // Ends the if statement
     ?>
 
+<?php get_sidebar(); ?>
 
 <?php get_footer(); ?>

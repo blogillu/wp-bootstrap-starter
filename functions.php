@@ -13,13 +13,9 @@ function theme_enqueue_styles() {
 	wp_enqueue_style( 'custom2', '/css/custom-style.css',array(), '1.1.0', 'screen');
 
     // Enqueue Bootstrap JS Bundle (includes Popper)
-    wp_enqueue_script( 'bootstrap-js', '//cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js', array(), '5.3.8', true );
+    wp_enqueue_script( 'bootstrap', '//cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js', array(), '5.3.8', true );
 }
 add_action( 'wp_enqueue_scripts', 'theme_enqueue_styles' );
-
-
-
-
 
 remove_action('wp_head', 'print_emoji_detection_script', 7); 
 remove_action('wp_print_styles', 'print_emoji_styles');
@@ -70,8 +66,9 @@ add_action( 'init', 'purge_wp_global_inline_styles' );
 // Prevent WordPress from printing separate inline styles for individual blocks
 add_filter( 'should_load_separate_core_block_assets', '__return_false' );
 
-// Disable Gutenberg editor.
+// Disable Gutenberg editor/Widgets
 add_filter('use_block_editor_for_post_type', '__return_false', 10);
+add_filter( 'use_widgets_block_editor', '__return_false' );
 
 // Remove RSS feed links from WordPress header
 remove_action( 'wp_head', 'feed_links', 2 );
@@ -83,16 +80,18 @@ remove_action('wp_head', 'wp_oembed_add_discovery_links', 10);
 remove_action('wp_head', 'wp_oembed_add_host_js');
 remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0);
 
+// Add Featured image at Dashboard
 
 add_theme_support( 'post-thumbnails' );
-
 
 // Disable Speculative Loading via the Speculation Rules API (since WordPress v6.8).
 add_filter( 'wp_speculation_rules_configuration', '__return_null' );
 
+// Register menu
+
 function theme_setup() {
     register_nav_menus( array(
-        'primary' => __( 'Primary Menu', 'your-theme-textdomain' ),
+        'primary' => __( 'Primary Menu', 'wp-bootstrap-starter' ),
     ) );
 }
 add_action( 'after_setup_theme', 'theme_setup' );
@@ -102,4 +101,20 @@ if ( ! file_exists( get_template_directory() . '/class-wp-bootstrap-navwalker.ph
 } else {
     require_once get_template_directory() . '/class-wp-bootstrap-navwalker.php';
 }
+
+// Register SideBar
+
+function my_theme_register_sidebars() {
+    register_sidebar( array(
+        'name'          => __( 'Main Sidebar', 'wp-bootstrap-starter' ),
+        'id'            => 'main-sidebar',
+        'description'   => __( 'Widgets added here will appear in the sidebar.', 'my-theme-textdomain' ),
+        'before_widget' => '<div id="%1$s" class="p-4">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h4 class="fst-italic">',
+        'after_title'   => '</h4>',
+    ) );
+}
+add_action( 'widgets_init', 'my_theme_register_sidebars' );
+
 
